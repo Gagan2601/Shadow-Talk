@@ -1,0 +1,78 @@
+.container {
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative; /* Required for animations */
+}
+
+.container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='black'/%3E%3Ccircle cx='50' cy='50' r='30' fill='red'/%3E%3Ccircle cx='50' cy='50' r='20' fill='yellow'/%3E%3C/svg%3E");
+  background-size: cover;
+  opacity: 0.7;
+  animation: moveBackgroundUp 2s ease-in-out forwards;
+}
+
+.title,
+.description,
+.textField,
+.joinButton {
+  opacity: 0; /* Initially hide text elements */
+  animation: fadeIn 1s ease-in-out forwards; /* Animation for text elements */
+  animation-delay: 2s; /* Delay text fade-in after background animation */
+}
+
+@keyframes moveBackgroundUp {
+  from {
+    background-position: 0 100%; /* Start from bottom */
+  }
+  to {
+    background-position: 0 0; /* Move to original position */
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.title {
+  z-index: 999;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.description {
+  z-index: 999;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.textField {
+  z-index: 999;
+  width: 300px;
+  margin-bottom: 1rem;
+}
+
+.joinButton {
+  z-index: 999;
+  background-color: #4caf50; /* Green button color */
+  color: white; /* White text color */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px 20px; /* Adjust padding for desired button size */
+}
