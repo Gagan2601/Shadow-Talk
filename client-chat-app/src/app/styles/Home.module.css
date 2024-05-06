@@ -8,7 +8,7 @@
   position: relative; /* Required for animations */
 }
 
-.container::after {
+/* .container::after {
   content: "";
   position: absolute;
   top: 0;
@@ -19,7 +19,7 @@
   background-size: cover;
   opacity: 0.7;
   animation: moveBackgroundUp 2s ease-in-out forwards;
-}
+} */
 
 .title,
 .description,

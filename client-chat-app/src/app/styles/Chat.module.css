@@ -1,10 +1,11 @@
 .chatContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
-  height: 100%;
+  height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
 .chatHeader {
@@ -13,7 +14,7 @@
   align-items: center;
   padding: 10px;
   border-bottom: none;
-  border-radius: 0; /* dark gray background */
+  border-radius: 0;
 }
 
 .chatHeader h1 {
@@ -24,6 +25,7 @@
 }
 
 .chatForm {
+  z-index: 999;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -32,6 +34,7 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
+  /* background-color: black; */
   border-top: 1px solid #ccc;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -66,12 +69,13 @@
 }
 
 .messageList {
-  z-index: 999;
+  z-index: 997;
   padding: 20px;
   width: 100%;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 60px; /* add some space for the fixed chatForm */
+  margin-bottom: 60px;
+  max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
 
