@@ -12,7 +12,7 @@ interface RoomName {
     }
 }
 
-export const Chat: FC<RoomName> = ({ params }) => {
+const Chat: FC<RoomName> = ({ params }) => {
     const room: string = params.roomName;
     const username: string = params.username;
     const [message, setMessage] = useState<string>("");
@@ -102,3 +102,5 @@ export const Chat: FC<RoomName> = ({ params }) => {
         </>
     );
 };
+
+export default Chat;
