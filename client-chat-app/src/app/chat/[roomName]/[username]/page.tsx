@@ -10,12 +10,9 @@ interface RoomName {
         roomName: string;
         username: string;
     }
-    query: {
-        username: string;
-    }
 }
 
-const Chat: FC<RoomName> = ({ params }) => {
+export const Chat: FC<RoomName> = ({ params }) => {
     const room: string = params.roomName;
     const username: string = params.username;
     const [message, setMessage] = useState<string>("");
@@ -105,5 +102,3 @@ const Chat: FC<RoomName> = ({ params }) => {
         </>
     );
 };
-
-export default Chat;
