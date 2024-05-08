@@ -56,6 +56,12 @@
   color: white;
 }
 
+.titleMain {
+  color: #008cff;
+  text-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
+    0 0 100px #008cff;
+}
+
 .description {
   z-index: 999;
   font-size: 1.2rem;
@@ -67,12 +73,40 @@
   z-index: 999;
   width: 300px;
   margin-bottom: 1rem;
+  background-color: white;
+  border-radius: 10px;
 }
 
-.joinButton {
+/* .joinButton {
   z-index: 999;
-  background-color: #4caf50; /* Green button color */
-  color: white; /* White text color */
-  border-radius: 4px; /* Rounded corners */
-  padding: 10px 20px; /* Adjust padding for desired button size */
+  background-color: #4caf50; 
+  color: white; 
+  border-radius: 4px;
+  padding: 10px 20px;
+} */
+
+.joinButton {
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #ffffff80;
+  text-shadow: none;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 1px solid #ffffff80;
+  transition: 0.5s ease;
+  user-select: none;
+}
+
+.joinButton:hover,
+.joinButton:focus {
+  color: #ffffff;
+  background: #008cff;
+  border: 1px solid #008cff;
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
+  box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
+    0 0 100px #008cff;
 }

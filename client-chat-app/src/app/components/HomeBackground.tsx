@@ -1,8 +1,7 @@
-
 'use client'
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import './Background.css'
+import './HomeBackground.css'
 
 const ParticlesBg = dynamic(() => import("particles-bg"), { ssr: false });
 const Background = () => {

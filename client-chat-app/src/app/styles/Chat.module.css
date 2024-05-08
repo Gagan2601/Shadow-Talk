@@ -107,3 +107,7 @@
   font-weight: bold;
   color: #f1e7c9;
 }
+
+.meteorEffect {
+  z-index: -999;
+}

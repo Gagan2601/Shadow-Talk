@@ -1,9 +1,10 @@
 'use client'
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { useEffect, useState } from "react";
 import { socket } from "../../../../socket";
 import styles from "../../../styles/Chat.module.css"
-import Background from "@/app/components/Background";
+import { Stars } from "@/app/components/ChatBackground";
+import Loading from "@/app/components/Loader";
 
 interface RoomName {
     params: {
@@ -17,10 +18,52 @@ const Chat: FC<RoomName> = ({ params }) => {
     const username: string = params.username;
     const [message, setMessage] = useState<string>("");
     const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         socket.emit("join-room", room);
     }, [room]);
+    useEffect(() => {
+        socket.on("connect", () => {
+            console.log("Connected", socket.id);
+            setLoading(false);
+        });
+        socket.on("recieve-message", (data: { text: string; sender: string }) => {
+            setMessages((prevMessages) => [...prevMessages, data]);
+        });
+        socket.on("welcome", (s: string) => {
+            console.log(s);
+        });
+        socket.on("disconnect", () => {
+            socket.disconnect();
+        });
+        return () => {
+            socket.off("connect");
+            socket.off("recieve-message");
+            socket.off("welcome");
+            socket.off("disconnect");
+        };
+    }, [room]);
+
+    const stars = useMemo(() => {
+        return (
+            <div className="w-full absolute inset-0 h-screen">
+                <Stars
+                    id="tsparticlesfullpage"
+                    background="transparent"
+                    minSize={0.6}
+                    maxSize={1.4}
+                    particleDensity={100}
+                    className="w-full h-full"
+                    particleColor="#FFFFFF"
+                />
+            </div>
+        );
+    }, []);
+
+    if (loading) {
+        return <Loading />;
+    }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -46,30 +89,10 @@ const Chat: FC<RoomName> = ({ params }) => {
         }
     };
 
-    useEffect(() => {
-        socket.on("connect", () => {
-            console.log("Connected", socket.id);
-        });
-        socket.on("recieve-message", (data: { text: string; sender: string }) => {
-            setMessages((prevMessages) => [...prevMessages, data]);
-        });
-        socket.on("welcome", (s: string) => {
-            console.log(s);
-        });
-        socket.on("disconnect", () => {
-            socket.disconnect();
-        });
-        return () => {
-            socket.off("connect");
-            socket.off("recieve-message");
-            socket.off("welcome");
-            socket.off("disconnect");
-        };
-    }, [room]);
 
     return (
         <>
-            <Background />
+            {stars}
             <div className={styles.chatContainer}>
                 <header className={styles.chatHeader}>
                     <h1 className={styles.roomName}>{room}</h1>
