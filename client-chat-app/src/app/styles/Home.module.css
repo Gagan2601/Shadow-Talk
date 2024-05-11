@@ -54,6 +54,7 @@
   font-weight: bold;
   margin-bottom: 1rem;
   color: white;
+  letter-spacing: 0.5rem;
 }
 
 .titleMain {
@@ -66,7 +67,7 @@
   z-index: 999;
   font-size: 1.2rem;
   margin-bottom: 2rem;
-  color: white;
+  color: #ccc;
 }
 
 .textField {

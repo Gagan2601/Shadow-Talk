@@ -2,10 +2,11 @@
 import { FC, useMemo } from "react";
 import { useEffect, useState } from "react";
 import { socket } from "../../../socket";
-import { useSearchParams } from 'next/navigation';
 import styles from "../../styles/Chat.module.css"
 import { Stars } from "@/app/components/ChatBackground";
-import Loading from "@/app/components/Loader";
+// import Loading from "@/app/components/Loader";
+import { CopyURLButton } from "@/app/components/CopyButton";
+import { Send as SendIcon } from '@mui/icons-material';
 
 interface RoomName {
     params: {
@@ -14,17 +15,30 @@ interface RoomName {
 }
 
 const Chat: FC<RoomName> = ({ params }) => {
-    const searchParams = useSearchParams();
     const room: string = params.roomName;
-    const username = searchParams.get('username');
+    const [username, setUsername] = useState<string>("");
     const [message, setMessage] = useState<string>("");
     const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
     const [loading, setLoading] = useState(true);
     const [rateLimitCount, setRateLimitCount] = useState(0);
 
     useEffect(() => {
+        const getUsername = () => {
+            const user = window.prompt("Enter your username");
+            if (user) {
+                setUsername(user);
+            }
+        };
+        getUsername();
+    }, []);
+
+    useEffect(() => {
         console.log("Joining room:", room);
         socket.emit("join-room", { room, username });
+    }, [room, username])
+
+
+    useEffect(() => {
         socket.on("connect", () => {
             console.log("Connected", socket.id);
             setLoading(false);
@@ -74,20 +88,17 @@ const Chat: FC<RoomName> = ({ params }) => {
         );
     }, []);
 
-    // if (loading) {
-    //     return <Loading />;
-    // }
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (rateLimitCount < 10) { // check the counter
+        if (rateLimitCount < 10) {
             socket.emit("message", { sender: username, text: message, room });
             setMessage("");
-            setRateLimitCount(rateLimitCount + 1); // increment the counter
+            setRateLimitCount(rateLimitCount + 1);
         } else {
             alert("Rate limit exceeded. Please try again in 1 minute.");
         }
     };
+
     useEffect(() => {
         const resetCounter = setInterval(() => {
             setRateLimitCount(0);
@@ -130,6 +141,7 @@ const Chat: FC<RoomName> = ({ params }) => {
                 <header className={styles.chatHeader}>
                     <h1 className={styles.roomName}>{room}</h1>
                     <button className={styles.leaveButton} onClick={handleLeaveRoom}>Leave Room</button>
+                    <CopyURLButton className={styles.copyButton} />
                 </header>
                 <div className={styles.messageList}>
                     {messages.map((m, i) => (
@@ -152,7 +164,7 @@ const Chat: FC<RoomName> = ({ params }) => {
                         placeholder="Type a message..."
                     />
                     <button type="submit" className={styles.sendButton}>
-                        Send
+                        <SendIcon />
                     </button>
                 </form>
             </div>

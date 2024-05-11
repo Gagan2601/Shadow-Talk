@@ -19,7 +19,7 @@ app.use(cors());
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 10, // 10 requests per minute
+  max: 2, // 10 requests per minute
   delayMs: 0, // no delay
 });
 

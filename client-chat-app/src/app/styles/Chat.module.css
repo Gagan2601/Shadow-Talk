@@ -35,9 +35,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding-bottom: 20px;
   /* background-color: black; */
-  border-top: 1px solid #ccc;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -48,26 +47,26 @@
   border-radius: 4px;
   font-size: 16px;
   margin-right: 10px;
-  color: black;
+  background: transparent;
 }
 
 .chatInput:hover,
 .chatInput:focus {
   border: 1px solid #faf4e4;
-  background-color: #f2f2f2;
 }
 
 .sendButton {
-  background-color: #008cff;
-  color: black;
+  color: #008cff;
   border: none;
   border-radius: 4px;
   padding: 10px 20px;
   cursor: pointer;
+  transition: 0.5s ease;
 }
 
 .sendButton:hover {
-  background-color: #006bc3;
+  box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
+    0 0 100px #008cff;
 }
 
 .messageList {
@@ -101,10 +100,12 @@
   color: #fff;
   flex: 1;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .username {
-  margin: 0 10px 0 0;
+  margin: 0 20px 0 0;
   font-size: 1.5rem;
   font-weight: bold;
   color: #008cff;
@@ -120,18 +121,40 @@
   border-radius: 8px;
   font-size: 17px;
   font-weight: 500;
-  color: #ffffff80;
+  color: #ff0800;
   text-shadow: none;
   background: transparent;
   cursor: pointer;
   box-shadow: transparent;
-  border: 1px solid #ffffff80;
+  border: 1px solid #ff0800;
+  transition: 0.5s ease;
+  user-select: none;
+}
+
+.copyButton {
+  z-index: 999;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #ff0800;
+  text-shadow: none;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 1px solid #ff0800;
   transition: 0.5s ease;
   user-select: none;
 }
 
 .leaveButton:hover,
-.leaveButton:focus {
+.leaveButton:focus,
+.copyButton:hover,
+.copyButton:focus {
   color: #ffffff;
   background: #ff0800;
   border: 1px solid #ff0800;
