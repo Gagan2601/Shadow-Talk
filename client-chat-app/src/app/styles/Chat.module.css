@@ -21,7 +21,9 @@
   font-size: 34px;
   font-weight: bold;
   margin: 0;
-  color: #d3a121;
+  color: #008cff;
+  text-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
+    0 0 100px #008cff;
 }
 
 .chatForm {
@@ -56,7 +58,7 @@
 }
 
 .sendButton {
-  background-color: #d3a121;
+  background-color: #008cff;
   color: black;
   border: none;
   border-radius: 4px;
@@ -65,7 +67,7 @@
 }
 
 .sendButton:hover {
-  background-color: #97700d;
+  background-color: #006bc3;
 }
 
 .messageList {
@@ -92,7 +94,7 @@
 .sender {
   font-weight: bold;
   margin-right: 10px;
-  color: #f2e6c4;
+  color: #008cff;
 }
 
 .text {
@@ -105,9 +107,35 @@
   margin: 0 10px 0 0;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #f1e7c9;
+  color: #008cff;
 }
 
-.meteorEffect {
-  z-index: -999;
+.leaveButton {
+  z-index: 999;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #ffffff80;
+  text-shadow: none;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 1px solid #ffffff80;
+  transition: 0.5s ease;
+  user-select: none;
+}
+
+.leaveButton:hover,
+.leaveButton:focus {
+  color: #ffffff;
+  background: #ff0800;
+  border: 1px solid #ff0800;
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
+  box-shadow: 0 0 5px #ff0800, 0 0 20px #ff0800, 0 0 50px #ff0800,
+    0 0 100px #ff0800;
 }

@@ -2,6 +2,7 @@ import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 
 const port = 5000;
 const app = express();
@@ -16,18 +17,31 @@ const io = new Server(server, {
 
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("Modi MC");
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 10, // 10 requests per minute
+  delayMs: 0, // no delay
 });
+
+app.use(limiter);
 
 io.on("connection", (socket) => {
   console.log("User connected", socket.id);
 
-  socket.on("join-room", (room, username) => {
-    socket.join(room);
-    socket.username = username;
-    console.log(socket.id, "joined room", room);
-    io.to(room).emit("user-joined", socket.username);
+  socket.on("join-room", ({ room, username }) => {
+    if (username) {
+      socket.join(room);
+      console.log(username, "joined room", room);
+      socket.broadcast.to(room).emit("user-joined", username);
+    }
+  });
+
+  socket.on("leave-room", ({ room, username }) => {
+    if (username) {
+      socket.leave(room);
+      console.log(username, "left room", room);
+      socket.broadcast.to(room).emit("user-left", username);
+    }
   });
 
   socket.on("disconnect", () => {
@@ -35,14 +49,14 @@ io.on("connection", (socket) => {
     const rooms = Array.from(socket.rooms);
     rooms.forEach((room) => {
       if (room !== socket.id) {
-        io.to(room).emit("user-left", socket.username);
+        socket.broadcast.to(room).emit("user-left", socket.username);
       }
     });
   });
 
   socket.on("message", ({ sender, text, room }) => {
     console.log(text);
-    io.to(room).emit("recieve-message", { sender, text });
+    io.to(room).emit("receive-message", { sender, text });
   });
 });
 

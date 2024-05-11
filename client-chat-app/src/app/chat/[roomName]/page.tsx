@@ -1,49 +1,62 @@
 'use client'
 import { FC, useMemo } from "react";
 import { useEffect, useState } from "react";
-import { socket } from "../../../../socket";
-import styles from "../../../styles/Chat.module.css"
+import { socket } from "../../../socket";
+import { useSearchParams } from 'next/navigation';
+import styles from "../../styles/Chat.module.css"
 import { Stars } from "@/app/components/ChatBackground";
 import Loading from "@/app/components/Loader";
 
 interface RoomName {
     params: {
         roomName: string;
-        username: string;
     }
 }
 
 const Chat: FC<RoomName> = ({ params }) => {
+    const searchParams = useSearchParams();
     const room: string = params.roomName;
-    const username: string = params.username;
+    const username = searchParams.get('username');
     const [message, setMessage] = useState<string>("");
     const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
     const [loading, setLoading] = useState(true);
+    const [rateLimitCount, setRateLimitCount] = useState(0);
 
     useEffect(() => {
-        socket.emit("join-room", room);
-    }, [room]);
-    useEffect(() => {
+        console.log("Joining room:", room);
+        socket.emit("join-room", { room, username });
         socket.on("connect", () => {
             console.log("Connected", socket.id);
             setLoading(false);
         });
-        socket.on("recieve-message", (data: { text: string; sender: string }) => {
+        socket.on("receive-message", (data: { text: string; sender: string }) => {
+            console.log("Received message:", data);
             setMessages((prevMessages) => [...prevMessages, data]);
         });
         socket.on("welcome", (s: string) => {
             console.log(s);
+        });
+        socket.on("user-joined", (s: string) => {
+            console.log(s, "joined the room");
+            setMessages((prevMessages) => [...prevMessages, { text: `${s} joined the room`, sender: "system" }]);
+        });
+        socket.on("user-left", (s: string) => {
+            console.log(s, "left the room");
+            setMessages((prevMessages) => [...prevMessages, { text: `${s} left the room`, sender: "system" }]);
         });
         socket.on("disconnect", () => {
             socket.disconnect();
         });
         return () => {
             socket.off("connect");
-            socket.off("recieve-message");
+            socket.off("receive-message");
             socket.off("welcome");
+            socket.off("user-joined");
+            socket.off("user-left");
             socket.off("disconnect");
+            console.log("Chat component unmounted");
         };
-    }, [room]);
+    }, []);
 
     const stars = useMemo(() => {
         return (
@@ -61,15 +74,29 @@ const Chat: FC<RoomName> = ({ params }) => {
         );
     }, []);
 
-    if (loading) {
-        return <Loading />;
-    }
+    // if (loading) {
+    //     return <Loading />;
+    // }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        socket.emit("message", { sender: username, text: message, room });
-        setMessage("");
+        if (rateLimitCount < 10) { // check the counter
+            socket.emit("message", { sender: username, text: message, room });
+            setMessage("");
+            setRateLimitCount(rateLimitCount + 1); // increment the counter
+        } else {
+            alert("Rate limit exceeded. Please try again in 1 minute.");
+        }
     };
+    useEffect(() => {
+        const resetCounter = setInterval(() => {
+            setRateLimitCount(0);
+        }, 60 * 1000);
+
+        return () => {
+            clearInterval(resetCounter);
+        };
+    }, []);
 
     const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>, onChange: (value: string) => void) => {
         event.preventDefault();
@@ -89,6 +116,12 @@ const Chat: FC<RoomName> = ({ params }) => {
         }
     };
 
+    const handleLeaveRoom = () => {
+        if (window.confirm("Are you sure you want to leave the room?")) {
+            socket.emit("leave-room", { room, username });
+            window.history.back();
+        }
+    };
 
     return (
         <>
@@ -96,6 +129,7 @@ const Chat: FC<RoomName> = ({ params }) => {
             <div className={styles.chatContainer}>
                 <header className={styles.chatHeader}>
                     <h1 className={styles.roomName}>{room}</h1>
+                    <button className={styles.leaveButton} onClick={handleLeaveRoom}>Leave Room</button>
                 </header>
                 <div className={styles.messageList}>
                     {messages.map((m, i) => (
