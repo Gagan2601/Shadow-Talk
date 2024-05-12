@@ -21,6 +21,7 @@ const Chat: FC<RoomName> = ({ params }) => {
     const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
     const [loading, setLoading] = useState(true);
     const [rateLimitCount, setRateLimitCount] = useState(0);
+    const [userColors, setUserColors] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
         const getUsername = () => {
@@ -31,6 +32,13 @@ const Chat: FC<RoomName> = ({ params }) => {
         };
         getUsername();
     }, []);
+
+    useEffect(() => {
+        if (!userColors[username]) {
+            const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+            setUserColors((prevUserColors) => ({ ...prevUserColors, [username]: randomColor }));
+        }
+    }, [username, userColors]);
 
     useEffect(() => {
         console.log("Joining room:", room);
@@ -145,9 +153,15 @@ const Chat: FC<RoomName> = ({ params }) => {
                 </header>
                 <div className={styles.messageList}>
                     {messages.map((m, i) => (
-                        <div key={i} className={`${styles.message} ${m.sender === username ? styles.highlight : ''}`}>
-                            <span className={styles.sender}>{m.sender}:</span>
-                            <span className={styles.text}>{m.text}</span>
+                        <div key={i} className={`${styles.message} `}>
+                            <div
+                                className={styles.sender}
+                                style={{ color: userColors[m.sender] || "#fff" }}
+                            >
+                                {m.sender}:
+                            </div>
+                            <div className={styles.text}>{m.text}</div>
+
                         </div>
                     ))}
                 </div>
