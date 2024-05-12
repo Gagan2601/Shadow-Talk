@@ -148,8 +148,10 @@ const Chat: FC<RoomName> = ({ params }) => {
             <div className={styles.chatContainer}>
                 <header className={styles.chatHeader}>
                     <h1 className={styles.roomName}>{room}</h1>
-                    <button className={styles.leaveButton} onClick={handleLeaveRoom}>Leave Room</button>
-                    <CopyURLButton className={styles.copyButton} />
+                    <div className="flex flex-col gap-4 md:flex-row-reverse">
+                        <button className={styles.leaveButton} onClick={handleLeaveRoom}>Leave Room</button>
+                        <CopyURLButton className={styles.copyButton} />
+                    </div>
                 </header>
                 <div className={styles.messageList}>
                     {messages.map((m, i) => (

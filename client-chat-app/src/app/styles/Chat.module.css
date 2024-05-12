@@ -15,15 +15,20 @@
   padding: 10px;
   border-bottom: none;
   border-radius: 0;
+  width: 100vw;
+  margin: 4px;
 }
 
 .chatHeader h1 {
   font-size: 34px;
   font-weight: bold;
-  margin: 0;
   color: #008cff;
   text-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
     0 0 100px #008cff;
+}
+
+.roomName {
+  margin-left: 10px;
 }
 
 .chatForm {
@@ -76,12 +81,13 @@
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 60px;
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 180px);
   overflow-y: auto;
 }
 
 .message {
   display: flex;
+  flex-direction: row;
   align-items: first baseline;
   padding: 10px;
   border-radius: 4px;
@@ -96,7 +102,7 @@
 .sender {
   font-weight: bold;
   margin-right: 10px;
-  padding: 2px 6px;
+  /* padding: 2px 6px; */
   border-radius: 4px;
   display: inline-block;
 }
@@ -114,11 +120,14 @@
   font-size: 1.5rem;
   font-weight: bold;
   color: #008cff;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .leaveButton {
   z-index: 999;
-  position: fixed;
   top: 10px;
   right: 10px;
   padding: 10px 20px;
@@ -138,7 +147,6 @@
 
 .copyButton {
   z-index: 999;
-  position: fixed;
   top: 10px;
   left: 10px;
   padding: 10px 20px;
@@ -146,24 +154,44 @@
   border-radius: 8px;
   font-size: 17px;
   font-weight: 500;
-  color: #ff0800;
+  color: #008cff;
   text-shadow: none;
   background: transparent;
   cursor: pointer;
   box-shadow: transparent;
-  border: 1px solid #ff0800;
+  border: 1px solid #008cff;
   transition: 0.5s ease;
   user-select: none;
 }
 
 .leaveButton:hover,
-.leaveButton:focus,
-.copyButton:hover,
-.copyButton:focus {
+.leaveButton:focus {
   color: #ffffff;
   background: #ff0800;
   border: 1px solid #ff0800;
   text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
   box-shadow: 0 0 5px #ff0800, 0 0 20px #ff0800, 0 0 50px #ff0800,
     0 0 100px #ff0800;
+}
+
+.copyButton:hover,
+.copyButton:focus {
+  color: #ffffff;
+  background: #008cff;
+  border: 1px solid #008cff;
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
+  box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
+    0 0 100px #008cff;
+}
+
+@media (max-width: 767px) {
+  .username {
+    display: none;
+  }
+  .message {
+    flex-direction: column;
+  }
+  .messageList {
+    max-height: calc(100vh - 220px);
+  }
 }
