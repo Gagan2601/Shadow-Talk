@@ -67,14 +67,15 @@
   z-index: 999;
   font-size: 1.2rem;
   margin-bottom: 2rem;
-  color: #ccc;
+  color: #9f9f9f;
+  text-align: center;
 }
 
 .textField {
   z-index: 999;
   width: 300px;
   margin-bottom: 1rem;
-  background-color: white;
+  background-color: transparent;
   border-radius: 10px;
 }
 
@@ -92,12 +93,12 @@
   border-radius: 8px;
   font-size: 17px;
   font-weight: 500;
-  color: #ffffff80;
+  color: #008cff;
   text-shadow: none;
   background: transparent;
   cursor: pointer;
   box-shadow: transparent;
-  border: 1px solid #ffffff80;
+  border: 1px solid #008cff;
   transition: 0.5s ease;
   user-select: none;
 }

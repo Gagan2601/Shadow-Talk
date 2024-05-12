@@ -6,7 +6,7 @@ import styles from './styles/Home.module.css';
 import { Stars } from './components/ChatBackground';
 
 const checkIfRoomNameValid = (roomName: string) => {
-  return roomName.length >= 3 && !roomName.includes(' ');
+  return roomName.length >= 3 && roomName.length <= 10 && !roomName.includes(' ');
 };
 
 export default function Home() {
@@ -64,6 +64,25 @@ export default function Home() {
           onChange={handleRoomChange}
           error={hasInteractedWithRoomName && !isRoomNameValid}
           helperText={hasInteractedWithRoomName && !isRoomNameValid ? 'Room name must be at least 3 characters long with no spaces' : ''}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              color: 'white',
+              borderColor: 'white',
+              borderRadius: '10px',
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'white',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'white',
+              },
+              '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'red',
+              },
+            },
+          }}
+          InputLabelProps={{
+            style: { color: 'white' }
+          }}
         />
         <Link href={isRoomNameValid ? `/chat/${roomName}` : ''}
           passHref>
