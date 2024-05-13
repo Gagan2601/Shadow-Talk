@@ -6,6 +6,7 @@
   align-items: center;
   min-height: 100vh;
   position: relative; /* Required for animations */
+  margin: 2px 2px;
 }
 
 /* .container::after {
