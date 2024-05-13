@@ -138,7 +138,7 @@ const Chat: FC<RoomName> = ({ params }) => {
     const handleLeaveRoom = () => {
         if (window.confirm("Are you sure you want to leave the room?")) {
             socket.emit("leave-room", { room, username });
-            window.history.back();
+            window.location.href = '/';
         }
     };
 
