@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { socket } from "../../../socket";
 import styles from "../../styles/Chat.module.css"
 import { Stars } from "@/app/components/ChatBackground";
-// import Loading from "@/app/components/Loader";
 import { CopyURLButton } from "@/app/components/CopyButton";
 import { Send as SendIcon } from '@mui/icons-material';
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 
 interface RoomName {
     params: {
@@ -19,26 +19,22 @@ const Chat: FC<RoomName> = ({ params }) => {
     const [username, setUsername] = useState<string>("");
     const [message, setMessage] = useState<string>("");
     const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
-    const [loading, setLoading] = useState(true);
     const [rateLimitCount, setRateLimitCount] = useState(0);
-    const [userColors, setUserColors] = useState<{ [key: string]: string }>({});
+    const [openToast, setOpenToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [lastMessageRef, setLastMessageRef] = useState<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const getUsername = () => {
             const user = window.prompt("Enter your username");
             if (user) {
                 setUsername(user);
+            } else {
+                window.location.href = '/';
             }
         };
         getUsername();
     }, []);
-
-    useEffect(() => {
-        if (!userColors[username]) {
-            const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-            setUserColors((prevUserColors) => ({ ...prevUserColors, [username]: randomColor }));
-        }
-    }, [username, userColors]);
 
     useEffect(() => {
         console.log("Joining room:", room);
@@ -49,7 +45,6 @@ const Chat: FC<RoomName> = ({ params }) => {
     useEffect(() => {
         socket.on("connect", () => {
             console.log("Connected", socket.id);
-            setLoading(false);
         });
         socket.on("receive-message", (data: { text: string; sender: string }) => {
             console.log("Received message:", data);
@@ -80,6 +75,13 @@ const Chat: FC<RoomName> = ({ params }) => {
         };
     }, []);
 
+    useEffect(() => {
+        // Scroll to the last message when messages change
+        if (lastMessageRef) {
+            lastMessageRef.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
+
     const stars = useMemo(() => {
         return (
             <div className="w-full absolute inset-0 h-screen">
@@ -98,12 +100,18 @@ const Chat: FC<RoomName> = ({ params }) => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!message.trim()) {
+            setToastMessage('Message must not be empty');
+            setOpenToast(true);
+            return;
+        }
         if (rateLimitCount < 10) {
             socket.emit("message", { sender: username, text: message, room });
             setMessage("");
             setRateLimitCount(rateLimitCount + 1);
         } else {
-            alert("Rate limit exceeded. Please try again in 1 minute.");
+            setToastMessage('Rate limit exceeded. Please try again in 1 minute.');
+            setOpenToast(true);
         }
     };
 
@@ -155,10 +163,9 @@ const Chat: FC<RoomName> = ({ params }) => {
                 </header>
                 <div className={styles.messageList}>
                     {messages.map((m, i) => (
-                        <div key={i} className={`${styles.message} `}>
+                        <div key={i} className={`${styles.message} `} ref={i === messages.length - 1 ? setLastMessageRef : null} >
                             <div
                                 className={styles.sender}
-                                style={{ color: userColors[m.sender] || "#fff" }}
                             >
                                 {m.sender}:
                             </div>
@@ -184,6 +191,7 @@ const Chat: FC<RoomName> = ({ params }) => {
                     </button>
                 </form>
             </div>
+            <CustomSnackbar open={openToast} message={toastMessage} onClose={() => setOpenToast(false)} />
         </>
     );
 };
