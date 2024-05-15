@@ -54,6 +54,17 @@
   margin-right: 10px;
   background: transparent;
   color: white;
+  resize: none;
+  overflow: hidden;
+}
+
+.chatInput::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for WebKit browsers */
+}
+
+.chatInput {
+  -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
 }
 
 .chatInput:hover,
@@ -115,6 +126,16 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-all;
+}
+
+.joinMessage .text {
+  color: #33ff57;
+  text-shadow: 0 0 5px #33ff57, 0 0 10px #33ff57, 0 0 20px #33ff57;
+}
+
+.leaveMessage .text {
+  color: #ff5733;
+  text-shadow: 0 0 5px #ff5733, 0 0 10px #ff5733, 0 0 20px #ff5733;
 }
 
 .username {
