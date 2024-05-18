@@ -17,6 +17,7 @@
   border-radius: 0;
   width: 100vw;
   margin: 4px;
+  position: relative;
 }
 
 .chatHeader h1 {
@@ -34,14 +35,14 @@
 
 .chatForm {
   z-index: 999;
-  position: fixed;
+  width: 100%;
   bottom: 0;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 20px;
+  padding: 20px 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -87,13 +88,13 @@
 }
 
 .messageList {
+  flex: 1;
   z-index: 997;
   padding: 20px;
   width: 100%;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 60px;
-  max-height: calc(100vh - 180px);
+  /* max-height: calc(100vh - 180px); */
   overflow-y: auto;
 }
 
@@ -103,7 +104,6 @@
   align-items: first baseline;
   padding: 10px;
   border-radius: 4px;
-  margin-bottom: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   white-space: pre-wrap;
   background-clip: text;
@@ -207,6 +207,38 @@
     0 0 100px #008cff;
 }
 
+.onlineUsers {
+  margin-bottom: 0;
+  padding: 10px;
+  background-color: transparent;
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+}
+
+.onlineUsers h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+  color: #008cff;
+  text-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
+    0 0 100px #008cff;
+}
+
+.onlineUsers ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.onlineUsers li {
+  margin-left: 10px;
+  margin-top: 5px;
+  color: #fff; /* Match the list items color to the theme */
+  text-shadow: 0 0 5px #fff, 0 0 20px #fff, 0 0 50px #fff, 0 0 100px #fff;
+}
+
 @media (max-width: 767px) {
   .username {
     display: none;
@@ -214,7 +246,10 @@
   .message {
     flex-direction: column;
   }
-  .messageList {
-    max-height: calc(100vh - 220px);
+  .chatHeader {
+    flex-direction: column; /* Add this line */
+  }
+  .onlineUsers {
+    position: static; /* Add this line */ /* Add this line */
   }
 }

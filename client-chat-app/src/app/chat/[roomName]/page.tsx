@@ -25,10 +25,14 @@ const Chat: FC<RoomName> = ({ params }) => {
     const [lastMessageRef, setLastMessageRef] = useState<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const userColors = useRef<Map<string, string>>(new Map());
+    const [onlineUsers, setOnlineUsers] = useState<{ username: string }[]>([]);
 
     useEffect(() => {
         const getUsername = () => {
-            const user = window.prompt("Enter your username");
+            let user = window.prompt("Enter your username (no spaces, max 12 characters)");
+            while (user && (user.includes(" ") || user.length > 12)) {
+                user = window.prompt("Invalid username. Enter your username (no spaces, max 12 characters)");
+            }
             if (user) {
                 setUsername(user);
             } else {
@@ -42,7 +46,6 @@ const Chat: FC<RoomName> = ({ params }) => {
         console.log("Joining room:", room);
         socket.emit("join-room", { room, username });
     }, [room, username])
-
 
     useEffect(() => {
         socket.on("connect", () => {
@@ -63,6 +66,9 @@ const Chat: FC<RoomName> = ({ params }) => {
             console.log(s, "left the room");
             setMessages((prevMessages) => [...prevMessages, { text: `${s} left the room`, type: "leave" }]);
         });
+        socket.on("update-users", (users: { username: string }[]) => {
+            setOnlineUsers(users);
+        });
         socket.on("disconnect", () => {
             socket.disconnect();
         });
@@ -72,13 +78,13 @@ const Chat: FC<RoomName> = ({ params }) => {
             socket.off("welcome");
             socket.off("user-joined");
             socket.off("user-left");
+            socket.off("update-users");
             socket.off("disconnect");
             console.log("Chat component unmounted");
         };
     }, []);
 
     useEffect(() => {
-        // Scroll to the last message when messages change
         if (lastMessageRef) {
             lastMessageRef.scrollIntoView({ behavior: "smooth" });
         }
@@ -127,6 +133,25 @@ const Chat: FC<RoomName> = ({ params }) => {
             clearInterval(resetCounter);
         };
     }, []);
+
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            const confirmationMessage = "Are you sure you want to leave the room?";
+            event.returnValue = confirmationMessage;
+
+            // Emit "leave-room" event to the server
+            socket.emit("leave-room", { room, username });
+
+            return confirmationMessage;
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [room, username, socket]);
 
     const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>, onChange: (value: string) => void) => {
         event.preventDefault();
@@ -188,7 +213,15 @@ const Chat: FC<RoomName> = ({ params }) => {
             <div className={styles.chatContainer}>
                 <header className={styles.chatHeader}>
                     <h1 className={styles.roomName}>{room}</h1>
-                    <div className="flex flex-col gap-4 md:flex-row-reverse">
+                    <div className={styles.onlineUsers}>
+                        <h2>Online Users:</h2>
+                        <ul>
+                            {onlineUsers.map((user, index) => (
+                                <li key={index}>{user.username}</li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="flex gap-4 flex-row-reverse ">
                         <button className={styles.leaveButton} onClick={handleLeaveRoom}>Leave Room</button>
                         <CopyURLButton className={styles.copyButton} />
                     </div>
@@ -198,7 +231,7 @@ const Chat: FC<RoomName> = ({ params }) => {
                         <div key={i} className={`${styles.message} ${m.type === 'join' ? styles.joinMessage : ''} ${m.type === 'leave' ? styles.leaveMessage : ''}`} ref={i === messages.length - 1 ? setLastMessageRef : null} >
                             {m.sender && (
                                 <div className={styles.sender} style={{ color: getUserColor(m.sender) }}>
-                                    {m.sender}:
+                                    {m.sender} :
                                 </div>
                             )}
                             <div className={styles.text}>{m.text}</div>
