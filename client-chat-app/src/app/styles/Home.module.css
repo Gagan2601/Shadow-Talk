@@ -25,7 +25,9 @@
 .title,
 .description,
 .textField,
-.joinButton {
+.joinButton,
+.availableRoomsButton,
+.switch {
   opacity: 0; /* Initially hide text elements */
   animation: fadeIn 1s ease-in-out forwards; /* Animation for text elements */
   animation-delay: 2s; /* Delay text fade-in after background animation */
@@ -81,6 +83,14 @@
   border-radius: 10px;
 }
 
+.textField1 {
+  z-index: 999;
+  width: 300px;
+  margin-bottom: 1rem;
+  background-color: transparent;
+  border-radius: 10px;
+}
+
 /* .joinButton {
   z-index: 999;
   background-color: #4caf50; 
@@ -113,4 +123,30 @@
   text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
   box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
     0 0 100px #008cff;
+}
+
+.availableRoomsButton {
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #18d262;
+  text-shadow: none;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 1px solid #18d262;
+  transition: 0.5s ease;
+  user-select: none;
+}
+
+.availableRoomsButton:hover,
+.availableRoomsButton:focus {
+  color: #ffffff;
+  background: #18d262;
+  border: 1px solid #18d262;
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
+  box-shadow: 0 0 5px #18d262, 0 0 20px #18d262, 0 0 50px #18d262,
+    0 0 100px #18d262;
 }

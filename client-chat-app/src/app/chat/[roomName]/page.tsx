@@ -43,8 +43,10 @@ const Chat: FC<RoomName> = ({ params }) => {
     }, []);
 
     useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const password = urlParams.get('password');
         console.log("Joining room:", room);
-        socket.emit("join-room", { room, username });
+        socket.emit("join-room", { room, username, password });
     }, [room, username])
 
     useEffect(() => {

@@ -234,7 +234,7 @@
 
 .onlineUsers li {
   margin-left: 10px;
-  margin-top: 5px;
+  margin-top: 2px;
   color: #fff; /* Match the list items color to the theme */
   text-shadow: 0 0 5px #fff, 0 0 20px #fff, 0 0 50px #fff, 0 0 100px #fff;
 }
